@@ -1,9 +1,13 @@
-import { defineComponent, onMounted, reactive, toRefs, watch } from 'vue';
+import { defineComponent, onMounted, reactive, ref, toRefs, watch } from 'vue';
 import { BuildingTypeOptions } from './constants';
 import { pointsData } from './config';
 import { PointsDataModel, BuildingTypeEnum } from './types';
+import ModalDetailComp from './comps/modal-detail/index.vue'
 
 export default defineComponent({
+	components: {
+		ModalDetailComp
+	},
 	setup() {
 		const pointsCheckedValue: number[] = [];
 		BuildingTypeOptions.forEach(item => {
@@ -29,6 +33,10 @@ export default defineComponent({
 				marker: []
 			}
 		];
+
+		const components = {
+			modalDetailRef: ref<InstanceType<typeof ModalDetailComp>>(null)
+		}
 
 		let map: any = null;
 		const methods = {
@@ -106,7 +114,9 @@ export default defineComponent({
 
 				//创建点标记的点击事件
 				marker.on('click', function (e) {
-					console.log('你点击了Marker', e.target.customAttribute);
+					if(e.target.customAttribute){
+						components.modalDetailRef.value.open(e.target.customAttribute, data.name)
+					}
 				});
 
 				return marker;
@@ -145,7 +155,8 @@ export default defineComponent({
 			BuildingTypeEnum,
 			BuildingTypeOptions,
 			...toRefs(state),
-			...methods
+			...methods,
+			...components
 		};
 	}
 });

@@ -5,7 +5,7 @@ export enum BuildingTypeEnum {
     teaching
 }
 
-interface DetailModel {
+export interface DetailModel {
     img?: string
     description: string
 }

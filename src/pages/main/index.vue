@@ -15,6 +15,8 @@
 			</a-checkbox>
 		</a-checkbox-group>
 	</div>
+
+	<modal-detail-comp ref="modalDetailRef" />
 </template>
 
 <script lang="ts" src="./index"></script>
