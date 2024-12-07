@@ -1,4 +1,4 @@
-import { defineComponent, onMounted, reactive, toRefs } from 'vue';
+import { defineComponent, onMounted, reactive, toRefs, watch } from 'vue';
 import { BuildingTypeOptions } from './constants';
 import { pointsData } from './config';
 import { PointsDataModel, BuildingTypeEnum } from './types';
@@ -10,7 +10,9 @@ export default defineComponent({
 			pointsCheckedValue.push(item.value);
 		});
 		const state = reactive({
-			pointsCheckedValue
+			pointsCheckedValue,
+			indeterminate: true,
+			checkAll: false
 		});
 
 		const pointsMarkes = [
@@ -58,24 +60,31 @@ export default defineComponent({
 					map.add(item.marker);
 				});
 			},
+			// 全选功能
+			onCheckAllChange(e: any) {
+				state.indeterminate = false;
+				state.pointsCheckedValue = e.target.checked ? pointsCheckedValue : [];
+				if (e.target.checked) {
+					pointsMarkes.forEach(item => {
+						map.remove(item.marker);
+					});
+					pointsMarkes.forEach(item => {
+						map.add(item.marker);
+					});
+				} else {
+					pointsMarkes.forEach(item => {
+						map.remove(item.marker);
+					});
+				}
+			},
 			// 改变标记点的显示和隐藏
 			onChangePoints(e) {
-                console.log(state.pointsCheckedValue)
 				if (e.target.checked) {
-					if (e.target.value === 'all') {
-						pointsMarkes.forEach(item => {
-							map.remove(item.marker);
-						});
-						pointsMarkes.forEach(item => {
+					pointsMarkes.forEach(item => {
+						if (item.type === e.target.value) {
 							map.add(item.marker);
-						});
-					} else {
-						pointsMarkes.forEach(item => {
-							if (item.type === e.target.value) {
-								map.add(item.marker);
-							}
-						});
-					}
+						}
+					});
 				} else {
 					pointsMarkes.forEach(item => {
 						if (item.type === e.target.value) {
@@ -115,6 +124,14 @@ export default defineComponent({
 		onMounted(() => {
 			methods.init();
 		});
+
+		watch(
+			() => state.pointsCheckedValue,
+			val => {
+				state.indeterminate = !!val.length && val.length < pointsCheckedValue.length;
+				state.checkAll = val.length === pointsCheckedValue.length;
+			}
+		);
 
 		return {
 			BuildingTypeEnum,
