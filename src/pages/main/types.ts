@@ -2,7 +2,8 @@
 export enum BuildingTypeEnum {
     functionality,
     sign,
-    teaching
+    teaching,
+    myLocation
 }
 
 export interface DetailModel {

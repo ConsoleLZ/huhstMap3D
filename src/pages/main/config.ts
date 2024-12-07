@@ -8,8 +8,39 @@ import {PointsDataModel, BuildingTypeEnum} from './types'
 import functionalityIcon from '@/assets/images/functionality.svg'
 import signIcon from '@/assets/images/sign.svg'
 import teachingIcon from '@/assets/images/teaching.svg'
+import myLocationIcon from '@/assets/images/myLocation.svg'
+
+export const BuildingTypeOptions = [
+    {
+        value: BuildingTypeEnum.myLocation,
+        label: '我的位置',
+        icon: myLocationIcon
+    },
+    {
+        value: BuildingTypeEnum.functionality,
+        label: '功能性建筑',
+        icon: functionalityIcon
+    },
+    {
+        value: BuildingTypeEnum.sign,
+        label: '标志性建筑',
+        icon: signIcon
+    },
+    {
+        value: BuildingTypeEnum.teaching,
+        label: '教学性建筑',
+        icon: teachingIcon
+    }
+]
 
 export const pointsData: PointsDataModel[] = [
+	{
+		name: '我的位置',
+		x: 112.00107,
+		y: 27.713394,
+		icon: myLocationIcon,
+        type: BuildingTypeEnum.myLocation
+	},
 	{
 		name: '致远楼',
 		x: 112.003957,

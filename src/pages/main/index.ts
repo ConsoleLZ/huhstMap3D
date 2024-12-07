@@ -1,6 +1,5 @@
 import { defineComponent, onMounted, reactive, ref, toRefs, watch } from 'vue';
-import { BuildingTypeOptions } from './constants';
-import { pointsData } from './config';
+import { pointsData, BuildingTypeOptions } from './config';
 import { PointsDataModel, BuildingTypeEnum } from './types';
 import ModalDetailComp from './comps/modal-detail/index.vue'
 
@@ -30,6 +29,10 @@ export default defineComponent({
 			},
 			{
 				type: BuildingTypeEnum.teaching,
+				marker: []
+			},
+			{
+				type: BuildingTypeEnum.myLocation,
 				marker: []
 			}
 		];
@@ -131,7 +134,7 @@ export default defineComponent({
 					style: {
 						'font-size': '14px',
 						position: 'relative',
-						top: '14px'
+						top: '5px'
 					},
 					position: [data.x, data.y] //点标记在地图上显示的位置
 				});

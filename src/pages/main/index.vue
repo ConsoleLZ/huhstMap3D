@@ -7,7 +7,7 @@
 			</a-checkbox>
 		</div>
 		<a-checkbox-group v-model:value="pointsCheckedValue">
-			<a-checkbox @change="onChangePoints" v-for="item in BuildingTypeOptions" :value="item.value">
+			<a-checkbox class="flex" @change="onChangePoints" v-for="item in BuildingTypeOptions" :value="item.value">
 				<div class="flex">
 					<img :src="item.icon" alt="" />
 					<div>{{ item.label }}</div>
