@@ -100,7 +100,6 @@ export default defineComponent({
 					title: data.name,
 					icon: data.icon,
 					offset: new AMap.Pixel(-12, -30), //相对于基点的偏移位置
-					customAttribute: '111'
 				});
 
 				marker.customAttribute = data.detail; // 自定义属性
