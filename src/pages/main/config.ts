@@ -28,7 +28,7 @@ export const BuildingTypeOptions = [
     },
     {
         value: BuildingTypeEnum.teaching,
-        label: '教学性建筑',
+        label: '教学楼',
         icon: teachingIcon
     }
 ]
