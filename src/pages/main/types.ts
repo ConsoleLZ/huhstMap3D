@@ -5,10 +5,16 @@ export enum BuildingTypeEnum {
     teaching
 }
 
+interface DetailModel {
+    img?: string
+    description: string
+}
+
 export interface PointsDataModel {
-    name: string,
+    name: string, // 名称
     x: number
     y: number
-    icon: any
-    type: BuildingTypeEnum
+    icon: any // 图标
+    type: BuildingTypeEnum, // 建筑物类型
+    detail?: DetailModel // 详情信息
 }

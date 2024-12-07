@@ -15,7 +15,11 @@ export const pointsData: PointsDataModel[] = [
 		x: 112.003957,
 		y: 27.713122,
 		icon: teachingIcon,
-        type: BuildingTypeEnum.teaching
+        type: BuildingTypeEnum.teaching,
+		detail: {
+			img: 'https://tse3-mm.cn.bing.net/th/id/OIP-C.HOQBfIe5vf_LsYd4pByQFQHaDf?w=303&h=164&c=7&r=0&o=5&dpr=1.5&pid=1.7',
+			description: '作为学校的教学楼之一，致远楼为学生提供了必要的学习空间，并且大教室内的照明设施被誉为“照亮梦想的智慧之光”，突显其对学生成长和发展的重要性。'
+		}
 	},
 	{
 		name: '图书馆',
