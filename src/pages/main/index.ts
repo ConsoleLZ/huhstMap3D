@@ -37,6 +37,10 @@ export default defineComponent({
 			{
 				type: BuildingTypeEnum.myLocation,
 				marker: []
+			},
+			{
+				type: BuildingTypeEnum.dormitory,
+				marker: []
 			}
 		];
 
@@ -52,10 +56,11 @@ export default defineComponent({
 					viewMode: '3D',
 					zooms: [16, 20],
 					pitch: 30,
-					zoom: 17,
-					center: [112.002842, 27.711096],
+					zoom: 18,
+					center: [112.003962, 27.711996],
 					rotateEnable: false,
 					pitchEnable: false,
+					rotation: 90, //初始地图顺时针旋转的角度
 					building: false // 关闭建筑物名称显示
 				});
 				// 只显示道路和兴趣点，隐藏建筑物名字等其他元素
@@ -98,7 +103,7 @@ export default defineComponent({
 					cancelText: '取消',
 					onOk() {
 						state.isPlanning = value;
-						if(!value){
+						if(!value && state.walking){
 							state.walking.clear(); // 清除之前的步行规划
 						}
 					}

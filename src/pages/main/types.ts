@@ -3,7 +3,8 @@ export enum BuildingTypeEnum {
     functionality,
     sign,
     teaching,
-    myLocation
+    myLocation,
+    dormitory
 }
 
 export interface DetailModel {
