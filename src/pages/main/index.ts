@@ -1,7 +1,7 @@
 import { defineComponent, onMounted, reactive, ref, toRefs, watch } from 'vue';
 import { pointsData, BuildingTypeOptions } from './config';
 import { PointsDataModel, BuildingTypeEnum } from './types';
-import ModalDetailComp from './comps/modal-detail/index.vue'
+import ModalDetailComp from './comps/modal-detail/index.vue';
 
 export default defineComponent({
 	components: {
@@ -39,7 +39,7 @@ export default defineComponent({
 
 		const components = {
 			modalDetailRef: ref<InstanceType<typeof ModalDetailComp>>(null)
-		}
+		};
 
 		let map: any = null;
 		const methods = {
@@ -70,6 +70,24 @@ export default defineComponent({
 				pointsMarkes.forEach(item => {
 					map.add(item.marker);
 				});
+				methods.routePlanning()
+			},
+			// 线路规划(步行)
+			routePlanning() {
+				//构造路线导航类
+				const walking = new AMap.Walking({
+					map: map,
+					panel: "panel"
+				}); 
+
+				// 根据起终点经纬度规划驾车导航路线
+				walking.search(new AMap.LngLat(112.00107, 27.713394), new AMap.LngLat(112.003957, 27.713122), function (status, result) {
+					if (status === 'complete') {
+					  console.log('绘制驾车路线完成')
+					} else {
+					  console.log('获取驾车数据失败：' + result)
+					}
+				  });
 			},
 			// 全选功能
 			onCheckAllChange(e: any) {
@@ -110,15 +128,15 @@ export default defineComponent({
 					position: new AMap.LngLat(data.x, data.y), //经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
 					title: data.name,
 					icon: data.icon,
-					offset: new AMap.Pixel(-12, -30), //相对于基点的偏移位置
+					offset: new AMap.Pixel(-12, -30) //相对于基点的偏移位置
 				});
 
 				marker.customAttribute = data.detail; // 自定义属性
 
 				//创建点标记的点击事件
 				marker.on('click', function (e) {
-					if(e.target.customAttribute){
-						components.modalDetailRef.value.open(e.target.customAttribute, data.name)
+					if (e.target.customAttribute) {
+						components.modalDetailRef.value.open(e.target.customAttribute, data.name);
 					}
 				});
 
