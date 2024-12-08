@@ -17,7 +17,8 @@ export default defineComponent({
 			pointsCheckedValue,
 			indeterminate: true,
 			checkAll: false,
-			isPlanning: false // 是否开启线路规划
+			isPlanning: false, // 是否开启线路规划
+			walking: null
 		});
 
 		const pointsMarkes = [
@@ -97,19 +98,24 @@ export default defineComponent({
 					cancelText: '取消',
 					onOk() {
 						state.isPlanning = value;
+						if(!value){
+							state.walking.clear(); // 清除之前的步行规划
+						}
 					}
 				});
 			},
 			// 线路规划(步行)
 			routePlanning(myLocation: LocationModel, terminal: LocationModel) {
+				if (state.walking) {
+					state.walking.clear(); // 清除之前的步行规划
+				}
 				//构造路线导航类
-				const walking = new AMap.Walking({
-					map: map,
-					panel: 'panel'
+				state.walking = new AMap.Walking({
+					map,
 				});
 
 				// 根据起终点经纬度规划驾车导航路线
-				walking.search(
+				state.walking.search(
 					new AMap.LngLat(myLocation.x, myLocation.y),
 					new AMap.LngLat(terminal.x, terminal.y),
 					function (status, result) {

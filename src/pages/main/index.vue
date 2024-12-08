@@ -1,6 +1,5 @@
 <template>
 	<div id="map-container"></div>
-	<div id="panel"></div>
 	<div class="points-info">
 		<div class="margin-bottom-10">
 			<a-checkbox v-model:checked="checkAll" :indeterminate="indeterminate" @change="onCheckAllChange">
