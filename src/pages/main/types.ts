@@ -19,3 +19,8 @@ export interface PointsDataModel {
     type: BuildingTypeEnum, // 建筑物类型
     detail?: DetailModel // 详情信息
 }
+
+export interface LocationModel {
+    x: number,
+    y: number
+}

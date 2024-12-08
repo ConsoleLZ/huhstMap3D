@@ -1,7 +1,8 @@
 import { defineComponent, onMounted, reactive, ref, toRefs, watch } from 'vue';
 import { pointsData, BuildingTypeOptions } from './config';
-import { PointsDataModel, BuildingTypeEnum } from './types';
+import { PointsDataModel, BuildingTypeEnum, LocationModel } from './types';
 import ModalDetailComp from './comps/modal-detail/index.vue';
+import { Modal, message } from 'ant-design-vue';
 
 export default defineComponent({
 	components: {
@@ -15,7 +16,8 @@ export default defineComponent({
 		const state = reactive({
 			pointsCheckedValue,
 			indeterminate: true,
-			checkAll: false
+			checkAll: false,
+			isPlanning: false // 是否开启线路规划
 		});
 
 		const pointsMarkes = [
@@ -48,7 +50,7 @@ export default defineComponent({
 				map = new AMap.Map('map-container', {
 					viewMode: '3D',
 					zooms: [16, 20],
-					pitch: 50,
+					pitch: 30,
 					zoom: 17,
 					center: [112.002842, 27.711096],
 					rotateEnable: false,
@@ -70,24 +72,54 @@ export default defineComponent({
 				pointsMarkes.forEach(item => {
 					map.add(item.marker);
 				});
-				methods.routePlanning()
+				map.on('click', e => {
+					const terminal = {
+						x: e.lnglat.getLng(),
+						y: e.lnglat.getLat()
+					};
+					const myLocation = pointsData.find(item => item.type === BuildingTypeEnum.myLocation);
+					const formatMyLocation = {
+						x: myLocation.x,
+						y: myLocation.y
+					};
+					if (state.isPlanning) {
+						methods.routePlanning(formatMyLocation, terminal);
+					}
+				});
+			},
+			// 控制线路规划是否开启
+			onControlPanel(value: boolean) {
+				const content: string = value ? '开启' : '关闭';
+				Modal.confirm({
+					title: '提示',
+					content: `是否${content}线路规划(开启后点击地图任意位置即可)`,
+					okText: '确认',
+					cancelText: '取消',
+					onOk() {
+						state.isPlanning = value;
+					}
+				});
 			},
 			// 线路规划(步行)
-			routePlanning() {
+			routePlanning(myLocation: LocationModel, terminal: LocationModel) {
 				//构造路线导航类
 				const walking = new AMap.Walking({
 					map: map,
-					panel: "panel"
-				}); 
+					panel: 'panel'
+				});
 
 				// 根据起终点经纬度规划驾车导航路线
-				walking.search(new AMap.LngLat(112.00107, 27.713394), new AMap.LngLat(112.003957, 27.713122), function (status, result) {
-					if (status === 'complete') {
-					  console.log('绘制驾车路线完成')
-					} else {
-					  console.log('获取驾车数据失败：' + result)
+				walking.search(
+					new AMap.LngLat(myLocation.x, myLocation.y),
+					new AMap.LngLat(terminal.x, terminal.y),
+					function (status, result) {
+						if (status === 'complete') {
+							message.success('绘制路线完成')
+						} else {
+							message.error('绘制路线失败')
+						}
 					}
-				  });
+				);
 			},
 			// 全选功能
 			onCheckAllChange(e: any) {

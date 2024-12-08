@@ -2,10 +2,13 @@
 	<div id="map-container"></div>
 	<div id="panel"></div>
 	<div class="points-info">
-		<div style="margin-bottom: 10px;">
+		<div class="margin-bottom-10">
 			<a-checkbox v-model:checked="checkAll" :indeterminate="indeterminate" @change="onCheckAllChange">
 				全选
 			</a-checkbox>
+			<a-button type="primary" size="small" class="margin-right-10" @click="onControlPanel(true)">开启线路规划</a-button>
+			<a-button type="primary" size="small" class="margin-right-10" @click="onControlPanel(false)">关闭线路规划</a-button>
+			<span>线路规划: {{ isPlanning ? '开启' : '关闭' }}</span>
 		</div>
 		<a-checkbox-group v-model:value="pointsCheckedValue">
 			<a-checkbox class="flex" @change="onChangePoints" v-for="item in BuildingTypeOptions" :value="item.value">
