@@ -4,7 +4,11 @@ export enum BuildingTypeEnum {
     sign,
     teaching,
     myLocation,
-    dormitory
+    dormitory,
+    school,
+    unknown,
+    canteen,
+    playground
 }
 
 export interface DetailModel {

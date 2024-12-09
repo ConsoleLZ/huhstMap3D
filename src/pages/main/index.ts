@@ -3,10 +3,14 @@ import { pointsData, BuildingTypeOptions } from './config';
 import { PointsDataModel, BuildingTypeEnum, LocationModel } from './types';
 import ModalDetailComp from './comps/modal-detail/index.vue';
 import { Modal, message } from 'ant-design-vue';
+import { pointsMarkes } from './constants';
+import LoadingComp from '@/components/loading/index.vue';
+import myLocationIcon from '@/assets/images/myLocation.svg';
 
 export default defineComponent({
 	components: {
-		ModalDetailComp
+		ModalDetailComp,
+		LoadingComp
 	},
 	setup() {
 		const pointsCheckedValue: number[] = [];
@@ -18,31 +22,11 @@ export default defineComponent({
 			indeterminate: true,
 			checkAll: false,
 			isPlanning: false, // 是否开启线路规划
-			walking: null
+			walking: null,
+			isMenuShow: false, // 是否打开功能菜单
+			isMap2D: false, // 是否为2D地图
+			isLoading: true
 		});
-
-		const pointsMarkes = [
-			{
-				type: BuildingTypeEnum.functionality,
-				marker: []
-			},
-			{
-				type: BuildingTypeEnum.sign,
-				marker: []
-			},
-			{
-				type: BuildingTypeEnum.teaching,
-				marker: []
-			},
-			{
-				type: BuildingTypeEnum.myLocation,
-				marker: []
-			},
-			{
-				type: BuildingTypeEnum.dormitory,
-				marker: []
-			}
-		];
 
 		const components = {
 			modalDetailRef: ref<InstanceType<typeof ModalDetailComp>>(null)
@@ -51,13 +35,14 @@ export default defineComponent({
 		let map: any = null;
 		const methods = {
 			// 地图初始化
-			init() {
+			init(isMap2D?: boolean) {
+				isMap2D = state.isMap2D;
 				map = new AMap.Map('map-container', {
-					viewMode: '3D',
+					viewMode: isMap2D ? '2D' : '3D',
 					zooms: [16, 20],
 					pitch: 30,
-					zoom: 18,
-					center: [112.003962, 27.711996],
+					zoom: 17,
+					center: [112.003962, 27.711196],
 					rotateEnable: false,
 					pitchEnable: false,
 					rotation: 90, //初始地图顺时针旋转的角度
@@ -66,18 +51,29 @@ export default defineComponent({
 				// 只显示道路和兴趣点，隐藏建筑物名字等其他元素
 				map.setFeatures(['building', 'road', 'bg']);
 				// 读取标记点数据
-				pointsData.forEach(item => {
-					pointsMarkes.forEach(mark => {
-						if (item.type === mark.type) {
-							mark.marker.push(methods.generateMark(item));
-						}
+				methods.getMyLocation().then(data => {
+					const myPosition = data?.position;
+					if (myPosition) {
+						pointsData.push({
+							name: '我的位置',
+							x: myPosition.lng,
+							y: myPosition.lat,
+							icon: myLocationIcon,
+							type: BuildingTypeEnum.myLocation
+						});
+					}
+					pointsData.forEach(item => {
+						pointsMarkes.forEach(mark => {
+							if (item.type === mark.type) {
+								mark.marker.push(methods.generateMark(item));
+							}
+						});
+						methods.generateText(item);
 					});
-					methods.generateText(item);
-				});
-
-				pointsMarkes.forEach(item => {
-					map.add(item.marker);
-				});
+					pointsMarkes.forEach(item => {
+						map.add(item.marker);
+					});
+				})
 				map.on('click', e => {
 					const terminal = {
 						x: e.lnglat.getLng(),
@@ -92,6 +88,22 @@ export default defineComponent({
 						methods.routePlanning(formatMyLocation, terminal);
 					}
 				});
+
+				map.on('complete', function () {
+					setTimeout(() => {
+						state.isLoading = false;
+					}, 1000);
+				});
+			},
+			// 打开 / 关闭功能菜单抽屉
+			onControlMenu(value: boolean) {
+				state.isMenuShow = value;
+			},
+			// 地图类型切换
+			onChangeMapType() {
+				map.destroy();
+				state.isMap2D = !state.isMap2D;
+				methods.init(state.isMap2D);
 			},
 			// 控制线路规划是否开启
 			onControlPanel(value: boolean) {
@@ -103,7 +115,7 @@ export default defineComponent({
 					cancelText: '取消',
 					onOk() {
 						state.isPlanning = value;
-						if(!value && state.walking){
+						if (!value && state.walking) {
 							state.walking.clear(); // 清除之前的步行规划
 						}
 					}
@@ -116,7 +128,7 @@ export default defineComponent({
 				}
 				//构造路线导航类
 				state.walking = new AMap.Walking({
-					map,
+					map
 				});
 
 				// 根据起终点经纬度规划驾车导航路线
@@ -125,12 +137,36 @@ export default defineComponent({
 					new AMap.LngLat(terminal.x, terminal.y),
 					function (status, result) {
 						if (status === 'complete') {
-							message.success('绘制路线完成')
+							message.success('绘制路线完成');
 						} else {
-							message.error('绘制路线失败')
+							message.error('绘制路线失败');
 						}
 					}
 				);
+			},
+			// 获取我的位置
+			getMyLocation(): Promise<any> {
+				return new Promise((resolve) => {
+					AMap.plugin('AMap.Geolocation', function () {
+						const geolocation = new AMap.Geolocation({
+							enableHighAccuracy: true, // 是否使用高精度定位，默认：true
+							timeout: 10000, // 设置定位超时时间，默认：无穷大
+							offset: [10, 20], // 定位按钮的停靠位置的偏移量
+							zoomToAccuracy: true, //  定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+							position: 'RB' //  定位按钮的排放位置,  RB表示右下
+						});
+
+						geolocation.getCurrentPosition(function (status, result) {
+							if (status == 'complete') {
+								message.success('定位获取成功');
+								resolve(result);
+							} else {
+								message.error('定位获取失败');
+								resolve(null);
+							}
+						});
+					});
+				});
 			},
 			// 全选功能
 			onCheckAllChange(e: any) {
@@ -202,6 +238,11 @@ export default defineComponent({
 				text.setMap(map); //将文本标记设置到地图上
 			}
 		};
+
+		window.addEventListener('load', function () {
+			console.log('All resources have been loaded.');
+			// 在这里可以执行依赖于所有资源加载完成后的代码
+		});
 
 		onMounted(() => {
 			methods.init();
