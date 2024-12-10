@@ -6,11 +6,13 @@ import { Modal, message } from 'ant-design-vue';
 import { pointsMarkes } from './constants';
 import LoadingComp from '@/components/loading/index.vue';
 import myLocationIcon from '@/assets/images/myLocation.svg';
+import ModalContributeUserComp from './comps/modal-contribute-user/index.vue';
 
 export default defineComponent({
 	components: {
 		ModalDetailComp,
-		LoadingComp
+		LoadingComp,
+		ModalContributeUserComp
 	},
 	setup() {
 		const pointsCheckedValue: number[] = [];
@@ -25,11 +27,14 @@ export default defineComponent({
 			walking: null,
 			isMenuShow: false, // 是否打开功能菜单
 			isMap2D: false, // 是否为2D地图
-			isLoading: true
+			isLoading: true,
+			activeKey: 0,
+			weatherInfo: null // 天气信息
 		});
 
 		const components = {
-			modalDetailRef: ref<InstanceType<typeof ModalDetailComp>>(null)
+			modalDetailRef: ref<InstanceType<typeof ModalDetailComp>>(null),
+			modalContributeUserRef: ref<InstanceType<typeof ModalContributeUserComp>>(null)
 		};
 
 		let map: any = null;
@@ -41,7 +46,7 @@ export default defineComponent({
 					viewMode: isMap2D ? '2D' : '3D',
 					zooms: [16, 20],
 					pitch: 30,
-					zoom: 17,
+					zoom: 17.7,
 					center: [112.003962, 27.711196],
 					rotateEnable: false,
 					pitchEnable: false,
@@ -54,13 +59,15 @@ export default defineComponent({
 				methods.getMyLocation().then(data => {
 					const myPosition = data?.position;
 					if (myPosition) {
-						pointsData.push({
-							name: '我的位置',
-							x: myPosition.lng,
-							y: myPosition.lat,
-							icon: myLocationIcon,
-							type: BuildingTypeEnum.myLocation
-						});
+						if (!pointsData.some(item => item.type === BuildingTypeEnum.myLocation)) {
+							pointsData.push({
+								name: '我的位置',
+								x: myPosition.lng,
+								y: myPosition.lat,
+								icon: myLocationIcon,
+								type: BuildingTypeEnum.myLocation
+							});
+						}
 					}
 					pointsData.forEach(item => {
 						pointsMarkes.forEach(mark => {
@@ -73,7 +80,8 @@ export default defineComponent({
 					pointsMarkes.forEach(item => {
 						map.add(item.marker);
 					});
-				})
+				});
+				methods.queryWeather()
 				map.on('click', e => {
 					const terminal = {
 						x: e.lnglat.getLng(),
@@ -93,6 +101,19 @@ export default defineComponent({
 					setTimeout(() => {
 						state.isLoading = false;
 					}, 1000);
+				});
+			},
+			// 天气查询
+			queryWeather() {
+				//加载天气查询插件
+				AMap.plugin('AMap.Weather', function () {
+					//创建天气查询实例
+					var weather = new AMap.Weather();
+					//执行实时天气信息查询
+					weather.getLive('娄底市', function (err, data) {
+						console.log(err, data);
+						state.weatherInfo = data
+					});
 				});
 			},
 			// 打开 / 关闭功能菜单抽屉
@@ -144,9 +165,13 @@ export default defineComponent({
 					}
 				);
 			},
+			// 查看本项目贡献者
+			onShowUser() {
+				components.modalContributeUserRef.value.open();
+			},
 			// 获取我的位置
 			getMyLocation(): Promise<any> {
-				return new Promise((resolve) => {
+				return new Promise(resolve => {
 					AMap.plugin('AMap.Geolocation', function () {
 						const geolocation = new AMap.Geolocation({
 							enableHighAccuracy: true, // 是否使用高精度定位，默认：true
@@ -231,11 +256,19 @@ export default defineComponent({
 					style: {
 						'font-size': '14px',
 						position: 'relative',
-						top: '5px'
+						top: '5px',
+						'background-color': 'rgba(0, 0, 0, 0)',
+						border: 'none'
 					},
 					position: [data.x, data.y] //点标记在地图上显示的位置
 				});
 				text.setMap(map); //将文本标记设置到地图上
+			},
+
+			// 改变地图中心点
+			onChangeCenter(x: number, y: number) {
+				map.setCenter([x, y]);
+				map.setZoom(19);
 			}
 		};
 
@@ -257,6 +290,7 @@ export default defineComponent({
 		);
 
 		return {
+			pointsData,
 			BuildingTypeEnum,
 			BuildingTypeOptions,
 			...toRefs(state),

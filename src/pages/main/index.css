@@ -30,3 +30,21 @@
 	   border-bottom-right-radius: 4px;
 	overflow: hidden;
 }
+.building-list {
+	margin-top: 10px;
+	width: 25vw;
+	height: 600px;
+	background-color: #ffffff;
+	border-radius: 10px;
+	padding: 10px;
+	font-size: 16px;
+	overflow: auto;
+}
+.building-list > div {
+	cursor: pointer;
+	border-radius: 5px;
+	padding: 5px 10px;
+}
+.building-list > div:hover {
+	background-color: rgb(204, 204, 204);
+}

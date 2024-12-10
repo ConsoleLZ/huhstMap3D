@@ -85,7 +85,7 @@ export const pointsData: PointsDataModel[] = [
 		icon: teachingIcon,
 		type: BuildingTypeEnum.teaching,
 		detail: {
-			img: 'https://tse3-mm.cn.bing.net/th/id/OIP-C.HOQBfIe5vf_LsYd4pByQFQHaDf?w=303&h=164&c=7&r=0&o=5&dpr=1.5&pid=1.7',
+			img: 'https://tse1-mm.cn.bing.net/th/id/OIP-C.LdXXd_zEq2UdAzL5l47ZAwHaFj?w=225&h=180&c=7&r=0&o=5&pid=1.7',
 			description:
 				'作为学校的教学楼之一，致远楼为学生提供了必要的学习空间，并且大教室内的照明设施被誉为“照亮梦想的智慧之光”，突显其对学生成长和发展的重要性。'
 		}
@@ -372,38 +372,171 @@ export const pointsData: PointsDataModel[] = [
 		type: BuildingTypeEnum.teaching
 	},
 	{
-		name: '阳光公寓1栋',
+		name: '阳光公寓1',
 		x: 112.00039,
 		y: 27.715329,
 		icon: dormitoryIcon,
 		type: BuildingTypeEnum.dormitory
 	},
 	{
-		name: '阳光公寓2栋',
+		name: '阳光公寓2',
 		x: 112.001297,
 		y: 27.715306,
 		icon: dormitoryIcon,
 		type: BuildingTypeEnum.dormitory
 	},
 	{
-		name: '阳光公寓3栋',
+		name: '阳光公寓3',
 		x: 112.000387,
 		y: 27.715016,
 		icon: dormitoryIcon,
 		type: BuildingTypeEnum.dormitory
 	},
 	{
-		name: '阳光公寓4栋',
+		name: '阳光公寓4',
 		x: 112.001278,
 		y: 27.715016,
 		icon: dormitoryIcon,
 		type: BuildingTypeEnum.dormitory
 	},
 	{
-		name: '阳光公寓5栋',
+		name: '阳光公寓5',
 		x: 112.000352,
 		y: 27.714569,
 		icon: dormitoryIcon,
 		type: BuildingTypeEnum.dormitory
+	},
+	{
+		name: '阳光公寓6',
+		x: 112.00111,
+		y: 27.714261,
+		icon: dormitoryIcon,
+		type: BuildingTypeEnum.dormitory
+	},
+	{
+		name: '知本楼',
+		x: 112.000217,
+		y: 27.712188,
+		icon: teachingIcon,
+		type: BuildingTypeEnum.teaching
+	},
+	{
+		name: '树艺楼',
+		x: 112.000217,
+		y: 27.711867,
+		icon: teachingIcon,
+		type: BuildingTypeEnum.teaching
+	},
+	{
+		name: '强毅楼',
+		x: 112.000807,
+		y: 27.712197,
+		icon: teachingIcon,
+		type: BuildingTypeEnum.teaching
+	},
+	{
+		name: '多闻楼',
+		x: 112.000807,
+		y: 27.711854,
+		icon: teachingIcon,
+		type: BuildingTypeEnum.teaching
+	},
+	{
+		name: '五义苑1',
+		x: 112.005515,
+		y: 27.710699,
+		icon: unknownIcon,
+		type: BuildingTypeEnum.unknown
+	},
+	{
+		name: '五义苑2',
+		x: 112.005515,
+		y: 27.710453,
+		icon: unknownIcon,
+		type: BuildingTypeEnum.unknown
+	},
+	{
+		name: '五义苑3',
+		x: 112.005515,
+		y: 27.710168,
+		icon: unknownIcon,
+		type: BuildingTypeEnum.unknown
+	},
+	{
+		name: '五义苑4',
+		x: 112.005515,
+		y: 27.709966,
+		icon: unknownIcon,
+		type: BuildingTypeEnum.unknown
+	},
+	{
+		name: '五义苑5',
+		x: 112.005515,
+		y: 27.709746,
+		icon: unknownIcon,
+		type: BuildingTypeEnum.unknown
+	},
+	{
+		name: '四科苑1',
+		x: 112.005376,
+		y: 27.71282,
+		icon: unknownIcon,
+		type: BuildingTypeEnum.unknown
+	},
+	{
+		name: '四科苑2',
+		x: 112.005376,
+		y: 27.713013,
+		icon: unknownIcon,
+		type: BuildingTypeEnum.unknown
+	},
+	{
+		name: '四科苑3',
+		x: 112.005376,
+		y: 27.713325,
+		icon: unknownIcon,
+		type: BuildingTypeEnum.unknown
+	},
+	{
+		name: '四科苑4',
+		x: 112.005376,
+		y: 27.713747,
+		icon: unknownIcon,
+		type: BuildingTypeEnum.unknown
+	},
+	{
+		name: '三才苑1',
+		x: 112.004503,
+		y: 27.7095,
+		icon: unknownIcon,
+		type: BuildingTypeEnum.unknown
+	},
+	{
+		name: '三才苑2',
+		x: 112.004498,
+		y: 27.709184,
+		icon: unknownIcon,
+		type: BuildingTypeEnum.unknown
+	},
+	{
+		name: '三才苑3',
+		x: 112.004498,
+		y: 27.708877,
+		icon: unknownIcon,
+		type: BuildingTypeEnum.unknown
+	},
+	{
+		name: '新光球场',
+		x: 112.004466,
+		y: 27.709931,
+		icon: playgroundIcon,
+		type: BuildingTypeEnum.playground
+	},
+	{
+		name: '体育馆',
+		x: 111.999648,
+		y: 27.709552,
+		icon: functionalityIcon,
+		type: BuildingTypeEnum.functionality
 	}
 ];
