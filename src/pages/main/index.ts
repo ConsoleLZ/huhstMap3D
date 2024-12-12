@@ -156,7 +156,7 @@ export default defineComponent({
 				state.walking.search(
 					new AMap.LngLat(myLocation.x, myLocation.y),
 					new AMap.LngLat(terminal.x, terminal.y),
-					function (status, result) {
+					function (status) {
 						if (status === 'complete') {
 							message.success('绘制路线完成');
 						} else {

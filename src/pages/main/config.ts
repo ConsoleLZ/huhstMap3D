@@ -1,5 +1,4 @@
 import { PointsDataModel, BuildingTypeEnum } from './types';
-import { message } from 'ant-design-vue';
 // 地图标记数据点
 /**
  * teaching 教学楼
