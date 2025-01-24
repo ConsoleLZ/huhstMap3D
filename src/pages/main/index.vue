@@ -22,10 +22,15 @@
 		</div>
 		<a-collapse v-model:activeKey="activeKey" ghost>
 			<a-collapse-panel key="1" header="展开位置点信息">
+				<a-checkbox
+					class="flex"
+					v-model:checked="checkAll"
+					:indeterminate="indeterminate"
+					@change="onCheckAllChange"
+				>
+					全选
+				</a-checkbox>
 				<a-checkbox-group v-model:value="pointsCheckedValue">
-					<a-checkbox class="flex" v-model:checked="checkAll" :indeterminate="indeterminate" @change="onCheckAllChange">
-						全选
-					</a-checkbox>
 					<a-checkbox
 						class="flex"
 						@change="onChangePoints"
