@@ -5,7 +5,7 @@ import path from 'path'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue()],
-  base: '/huhstMap3D/',
+  base: '/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src')
